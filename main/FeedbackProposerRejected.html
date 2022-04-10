@@ -1,0 +1,86 @@
+{{ block title }}<div style="text-align: center;">In this round you were the PROPOSER.</div>{{ endblock }}
+{{ block content }}
+
+<!-- this is the root -->
+
+<div style="display: flex; justify-content: space-between; width: 300px;">
+    <div>
+        You chose an INITIAL POSITION of:
+    </div>
+    <div>
+        <b>{{player.group.initial_position}}{{Constants.currency_unit}}</b>
+    </div>
+</div>
+
+<div style="display: flex; justify-content: space-between; width: 300px;">
+    <div>
+        You chose an OFFER of:
+    </div>
+    <div>
+        <b style="color: green;">{{player.group.offer}}{{Constants.currency_unit}}</b>
+    </div>
+</div>
+
+<hr>
+
+<p>The RESPONDER <b>rejected</b> the OFFER.</p>
+
+<hr>
+
+<p>You chose your FINAL POSITION from between <b>{{lower}}</b> and <b>{{upper}}</b>.</p>
+<p>You chose a FINAL POSITION of <b style="color: green">{{group.final_position}}{{Constants.currency_unit}}</b>.</p>
+<p>The probability of OUTCOME P was (100 - <b style="color: green;">{{group.final_position}}</b>)%.</p>
+<p>The probability of OUTCOME R was <b style="color: green;">{{group.final_position}}</b>%.</p>
+
+<hr>
+
+{% if not group.guilty_at_trial %}
+    <p>The outcome is <b>OUTCOME R</b></p>
+
+    <div style="display: flex; justify-content: space-between; width: 350px;">
+        <div>
+            Your round earnings are:
+        </div>
+        <div>
+            <b style="color: red;">{{player.payoff_points}}</b>
+        </div>
+    </div>
+    <div style="display: flex; justify-content: space-between; width: 350px;">
+        <div>
+            The RESPONDER's round earnings are:
+        </div>
+        <div>
+            <b>{{responder_payoff}}</b>
+        </div>
+    </div>
+{% else %}
+    <p>The outcome is <b>OUTCOME P</b></p>
+
+    <div style="display: flex; justify-content: space-between; width: 350px;">
+        <div>
+            Your round earnings are:
+        </div>
+        <div>
+            {% if Constants.phi == 1%}
+                <b style="color: green;">{{player.payoff_points}}</b>
+            {% elif Constants.phi == 1.5 %}
+                1.5 x <b style="color: green;">{{player.group.final_position}}</b> = {{player.payoff_points}}
+            {% else %}
+                PHI NOT CAPTURED
+            {% endif %}
+        </div>
+    </div>
+    <div style="display: flex; justify-content: space-between; width: 350px;">
+        <div>
+            The RESPONDER's round earnings are:
+        </div>
+        <div>
+            <b style="color: red">{{responder_payoff}}</b>
+        </div>
+    </div>
+{% endif %}
+
+
+<p>{{ next_button }}</p>
+
+{{ endblock }}

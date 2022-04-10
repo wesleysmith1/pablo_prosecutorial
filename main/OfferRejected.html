@@ -1,0 +1,223 @@
+{{ block title }}<div style="text-align: center">The RESPONDER rejected your offer.</div>{{ endblock }}
+{{ block content }}
+
+<style>
+    .slidecontainer {
+    width: 100%;
+    }
+    
+    .slider {
+    -webkit-appearance: none;
+    width: 100%;
+    height: 15px;
+    border-radius: 5px;
+    background: #d3d3d3;
+    outline: none;
+    opacity: 0.7;
+    -webkit-transition: .2s;
+    transition: opacity .2s;
+    }
+    
+    .slider:hover {
+    opacity: 1;
+    }
+    
+    .slider::-webkit-slider-thumb {
+    -webkit-appearance: none;
+    appearance: none;
+    width: 25px;
+    height: 25px;
+    border-radius: 50%;
+    background: #04AA6D;
+    cursor: pointer;
+    }
+    
+    .slider::-moz-range-thumb {
+    width: 25px;
+    height: 25px;
+    border-radius: 50%;
+    background: #04AA6D;
+    cursor: pointer;
+    }
+</style>
+
+<script src="https://cdnjs.cloudflare.com/ajax/libs/Chart.js/3.7.0/chart.min.js"></script>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/chartjs-plugin-datalabels/2.0.0-rc.1/chartjs-plugin-datalabels.min.js"></script>
+
+<div style="text-align: center;">
+    Your FINAL POSITION must be between <b>{{lower}}{{Constants.currency_unit}}</b> and <b>{{upper}}{{Constants.currency_unit}}</b>.
+</div>
+
+<br>
+
+<div style="margin: auto; text-align: center;">
+    <div style="width: 700px; margin: auto;">
+        <canvas id="myChart"></canvas>
+    </div>
+
+    <br>
+
+    <div>Please use the slider to choose your FINAL POSITION.</div>
+
+    <br>
+
+    <div style="display: flex; justify-content: space-between; width: 600px; margin: auto">
+        <div><b>{{lower}}{{Constants.currency_unit}}</b></div>
+        <div>FINAL POSITION: <b><span id="finalCharge"></span>{{Constants.currency_unit}}</b></div>
+        <div><b>{{upper}}{{Constants.currency_unit}}</b></div>
+    </div>
+
+</div>
+
+<div class="slidecontainer" style="width: 600px; margin: auto">
+    <input type="range" min={{lower}} max={{upper}} value={{group.initial_position}} class="slider" id="chargeInput" step=".01" name="final_position">
+</div>
+
+<br>
+
+<button class="btn btn-primary" type="submit" id="nextButton" style="display: none;">Submit</button>
+
+<script>
+
+    var alpha = {{alpha}}
+    var currencyUnit = "{{Constants.currency_unit}}"
+    var sliderMoved = false
+
+    var lower = {{lower}}
+    var upper = {{upper}}
+    var trialCost = {{Constants.trial_cost}}
+    var phi = {{ Constants.phi }}
+
+    const ctx = document.getElementById('myChart').getContext('2d');
+    const myChart = new Chart(ctx, {
+        type: 'bar',
+        data: {
+            labels: [['Probability of OUTCOME P'], ['Probability of OUTCOME R']],
+            datasets: [{
+                datalabels: {
+                    formatter: function(value, context) {
+
+                        if (!sliderMoved) {
+                            return ['', '']
+                        }
+
+                        let cval = $('#chargeInput').val()
+
+                        let opProposer = cval * phi - trialCost
+                        let opResponder = -cval - trialCost
+
+                        let orProposer = -cval - trialCost
+                        let orResponder = -trialCost
+
+                        if (context.dataIndex == 0) {
+                            // first bar - GUILTY
+                            return ['Your round earnings: ' + opProposer.toFixed(2) + currencyUnit, "RESPONDER's round earnings: " + opResponder.toFixed(2) + currencyUnit]
+                        } else {
+                            // second bar - INNOCENT
+                            return ['Your round earnings: ' + orProposer.toFixed(2) + currencyUnit, "RESPONDER's round earnings: " + orResponder.toFixed(2) + currencyUnit]
+                        }
+                    },
+                    align: 'top',
+                    offset: 20,
+                },
+                display: false,
+                data: [0, 0,],
+                backgroundColor: [
+                    'rgba(255, 99, 132, 0.2)',
+                    'rgba(54, 162, 235, 0.2)',
+                ],
+                borderColor: [
+                    'rgba(255, 99, 132, 1)',
+                    'rgba(54, 162, 235, 1)',
+                ],
+                borderWidth: 1
+            }],
+        },
+        plugins: [ChartDataLabels],
+        options: {
+            animation: false,
+            plugins: {
+                datalabels: {
+                    labels: {
+                        title: {
+                            display: true,
+                        },
+                    }
+                },
+                legend: {
+                    display: false
+                },
+            },
+            scales: {
+                y: {
+                    grid: {
+                        display: false
+                    },
+                    ticks: {
+                        // Include a dollar sign in the ticks
+                        callback: function(value, index, ticks) {
+                            return value + '%';
+                        },
+
+                    },
+                    drawOnChartArea: false,
+                    type: 'linear',
+                    min: 0,
+                    max: 100,
+                    display: true,
+                    value: 'sdfsd',
+                    title: {
+                        display: true,
+                        text: 'Probability',
+                    },
+                },
+                x: {
+                    grid: {
+                        display: false
+                    },
+                }
+            }
+        },
+    });
+
+    function probGuilty() {
+        // probability found guilty at trial
+        let c = $('#chargeInput').val()
+        console.log("here is charge, ", c)
+        return (1 - c / 100) * 100
+    }
+
+    $('#chargeInput').on('input', function (x) {
+
+        showNextButton()
+        
+        let val = x.target.value
+
+        $('#finalCharge').text(val)        
+        $('#nextBtn').show()
+
+        myChart.data.datasets.forEach((dataset) => {
+            dataset.data = [probGuilty(), 100-probGuilty()];
+        });
+
+        sliderMoved = true
+
+        myChart.update()
+    });
+
+    function showNextButton() {
+        $('#nextButton').show()
+    }
+
+    function randomizeInput() {
+        // set random value to charge input
+        // let rand_start = Math.floor(Math.random() * 101);
+        let rand_start = Math.random() * (upper - lower + .01) + lower
+        $('#chargeInput').val(rand_start)
+    }
+
+    randomizeInput()
+
+</script>
+
+{{ endblock }}

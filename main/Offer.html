@@ -1,0 +1,118 @@
+{{ block title }}<div style="text-align: center;">Your INITIAL POSITION is {{group.initial_position}}</div>{{ endblock }}
+{{ block content }}
+    <style>
+        .slidecontainer {
+        width: 100%;
+        }
+        
+        .slider {
+        -webkit-appearance: none;
+        width: 100%;
+        height: 15px;
+        border-radius: 5px;
+        background: #d3d3d3;
+        outline: none;
+        opacity: 0.7;
+        -webkit-transition: .2s;
+        transition: opacity .2s;
+        }
+        
+        .slider:hover {
+        opacity: 1;
+        }
+        
+        .slider::-webkit-slider-thumb {
+        -webkit-appearance: none;
+        appearance: none;
+        width: 25px;
+        height: 25px;
+        border-radius: 50%;
+        background: #04AA6D;
+        cursor: pointer;
+        }
+        
+        .slider::-moz-range-thumb {
+        width: 25px;
+        height: 25px;
+        border-radius: 50%;
+        background: #04AA6D;
+        cursor: pointer;
+        }
+    </style>
+
+    <div style="text-align: center;">
+        If your OFFER is rejected, your FINAL POSITION must be between <b>{{lower}}{{Constants.currency_unit}}</b> and <b>{{upper}}{{Constants.currency_unit}}</b>.
+    </div>
+
+    <div>
+        If the RESPONDER rejects your OFFER your round earnings and the round earnings of the RESPONDER will be reduced <b>{{Constants.trial_cost}}</b>
+    </div>
+
+    <br>
+    <hr>
+    <br>
+
+    <div style="display: flex; justify-content: space-between; width: 600px; margin: auto">
+        <div>0{{Constants.currency_unit}}</div>
+        <div>Please use the slider to choose your OFFER.</div>
+        <div>100{{Constants.currency_unit}}</div>
+    </div>
+
+    <div class="slidecontainer" style="width: 600px; margin: auto">
+        <input type="range" min="0" max="100" class="slider" value={{group.initial_position}} id="chargeInput" step=".01" name="offer">
+    </div>
+
+    <div id="zz" style="display: none;">
+        <div style="text-align: center;">
+            You selected an OFFER of: <b><span id="initialCharge"></span>{{Constants.currency_unit}}</b>
+        </div>
+    </div>
+
+    <br>
+
+    <button class="btn btn-primary" type="submit" id="nextButton" style="display: none;">Submit</button>
+
+    <script>
+
+        var currencyUnit = "{{Constants.currency_unit}}"
+        var alpha = {{player.alpha}}
+
+        function probGuilty() {
+            // probability found guilty at trial
+            let c = $('#chargeInput').val()
+            console.log("here is charge, ", c)
+            return (1 - c / 100) * 100
+        }
+
+        $('#chargeInput').on('input', function (x) {
+
+            
+            showNextButton()
+            
+            let val = x.target.value
+
+
+            $('#zz').show()
+            $('#initialCharge').text(val)
+            $('#lowerFinal').text(val * alpha)
+            $('#upperFinal').text(val)
+
+            $('#sliderValue').text(val + '%')
+
+            $('#nextBtn').show()
+        });
+
+        function showNextButton() {
+            $('#nextButton').show()
+        }
+
+        function randomizeInput() {
+            // set random value to charge input
+            let rand_start = Math.floor(Math.random() * 101);
+            $('#chargeInput').val(rand_start)
+        }
+
+        // randomizeInput()
+
+    </script>
+{{ endblock }}

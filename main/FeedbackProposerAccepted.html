@@ -1,0 +1,51 @@
+{{ block title }}<div style="text-align: center;">In this round you were the PROPOSER.</div>{{ endblock }}
+{{ block content }}
+
+    <div style="display: flex; justify-content: space-between; width: 300px;">
+        <div>
+            You chose an INITIAL POSITION of:
+        </div>
+        <div>
+            <b>{{player.group.initial_position}}{{Constants.currency_unit}}</b>
+        </div>
+    </div>
+
+    <div style="display: flex; justify-content: space-between; width: 300px;">
+        <div>
+            You chose an OFFER of:
+        </div>
+        <div>
+            <b style="color: green;">{{player.group.offer}}{{Constants.currency_unit}}</b>
+        </div>
+    </div>
+    
+    <hr>
+
+    <p>The RESPONDER <b>accepted</b> the OFFER. Thus the Outcome is <b>OUTCOME P</b>.</p>
+    
+    <hr>
+
+    <div style="display: flex; justify-content: space-between; width: 350px;">
+        <div>
+            Your round earnings are:
+        </div>
+        <div>
+            <b style="color: green;">{{player.payoff_points}}</b>.
+        </div>
+    </div>
+    <div style="display: flex; justify-content: space-between; width: 350px;">
+        <div>
+            The RESPONDER's round earnings are:
+        </div>
+        <div>
+            <b style="color: red">{{responder_payoff}}</b>.
+        </div>
+    </div>
+
+    <hr>
+
+    <p>If the RESPONDER had rejected the OFFER, your FINAL POSITION would have been between <b>{{lower}}</b> and <b>{{upper}}</b>.</p>
+
+    <p>{{ next_button }}</p>
+
+{{ endblock }}
