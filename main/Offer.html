@@ -40,6 +40,9 @@
         }
     </style>
 
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/Chart.js/3.7.0/chart.min.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/chartjs-plugin-datalabels/2.0.0-rc.1/chartjs-plugin-datalabels.min.js"></script>
+
     <div style="text-align: center;">
         If your OFFER is rejected, your FINAL POSITION must be between <b>{{lower}}{{Constants.currency_unit}}</b> and <b>{{upper}}{{Constants.currency_unit}}</b>.
     </div>
@@ -55,11 +58,11 @@
     <div style="display: flex; justify-content: space-between; width: 600px; margin: auto">
         <div>0{{Constants.currency_unit}}</div>
         <div>Please use the slider to choose your OFFER.</div>
-        <div>100{{Constants.currency_unit}}</div>
+        <div>{{Constants.offer_initpos_ceiling}}{{Constants.currency_unit}}</div>
     </div>
 
     <div class="slidecontainer" style="width: 600px; margin: auto">
-        <input type="range" min="0" max="100" class="slider" value={{group.initial_position}} id="chargeInput" step=".01" name="offer">
+        <input type="range" min="0" max="{{Constants.offer_initpos_ceiling}}" class="slider" value={{group.initial_position}} id="chargeInput" step=".01" name="offer">
     </div>
 
     <div id="zz" style="display: none;">
@@ -72,15 +75,165 @@
 
     <button class="btn btn-primary" type="submit" id="nextButton" style="display: none;">Submit</button>
 
+    <!-- ======================data exploration chart below -->
+    <hr>
+
+    <p>
+        You can use the slider below to explore possible outcomes if the RESPONDER rejects your offer.
+    </p>
+
+    <div style="margin: auto; text-align: center;">
+        <div style="width: 700px; margin: auto;">
+            <canvas id="myChart"></canvas>
+        </div>
+    
+        <br>
+    
+        <div style="text-align: center;">TODO: SHOULD THERE BE A LABEL HERE?</div>
+    
+        <br>
+    
+        <div style="display: flex; justify-content: space-between; width: 600px; margin: auto">
+            <div><b>{{lower}}{{Constants.currency_unit}}</b></div>
+            <div>TODO: WHAT SHOULD THIS BE?: <b><span id="finalCharge"></span>{{Constants.currency_unit}}</b></div>
+            <div><b>{{upper}}{{Constants.currency_unit}}</b></div>
+        </div>
+    
+    </div>
+    
+    <div class="slidecontainer" style="width: 600px; margin: auto">
+        <input type="range" min={{lower}} max={{upper}} value={{group.initial_position}} class="slider" id="exploreInput" step=".01">
+    </div>
+
+    <!-- ======================end -->
+
     <script>
 
         var currencyUnit = "{{Constants.currency_unit}}"
         var alpha = {{player.alpha}}
+        
+        
+        // data explore code
+        var lower = {{lower}}
+        var upper = {{upper}}
+        var phi = {{Constants.phi}}
+        var trialCost = {{Constants.trial_cost}}
+        var sliderMoved = false
+        const ctx = document.getElementById('myChart').getContext('2d');
+        const myChart = new Chart(ctx, {
+            type: 'bar',
+            data: {
+                labels: [['Probability of OUTCOME P'], ['Probability of OUTCOME R']],
+                datasets: [{
+                    datalabels: {
+                        formatter: function(value, context) {
+
+                            if (!sliderMoved) {
+                                return ['', '']
+                            }
+
+                            let cval = $('#exploreInput').val()
+
+                            let opProposer = cval * phi - trialCost
+                            let opResponder = -cval - trialCost
+
+                            let orProposer = -cval - trialCost
+                            let orResponder = -trialCost
+
+                            if (context.dataIndex == 0) {
+                                // first bar - GUILTY
+                                return ['Your round earnings: ' + opProposer.toFixed(2) + currencyUnit, "RESPONDER's round earnings: " + opResponder.toFixed(2) + currencyUnit]
+                            } else {
+                                // second bar - INNOCENT
+                                return ['Your round earnings: ' + orProposer.toFixed(2) + currencyUnit, "RESPONDER's round earnings: " + orResponder.toFixed(2) + currencyUnit]
+                            }
+                        },
+                        align: 'top',
+                        offset: 20,
+                    },
+                    display: false,
+                    data: [0, 0],
+                    backgroundColor: [
+                        'rgba(255, 99, 132, 0.2)',
+                        'rgba(54, 162, 235, 0.2)',
+                    ],
+                    borderColor: [
+                        'rgba(255, 99, 132, 1)',
+                        'rgba(54, 162, 235, 1)',
+                    ],
+                    borderWidth: 1
+                }],
+            },
+            plugins: [ChartDataLabels],
+            options: {
+                animation: false,
+                plugins: {
+                    datalabels: {
+                        labels: {
+                            title: {
+                                display: true,
+                            },
+                        }
+                    },
+                    legend: {
+                        display: false
+                    },
+                },
+                scales: {
+                    y: {
+                        grid: {
+                            display: false
+                        },
+                        ticks: {
+                            // Include a dollar sign in the ticks
+                            callback: function(value, index, ticks) {
+                                return value + '%';
+                            },
+
+                        },
+                        drawOnChartArea: false,
+                        type: 'linear',
+                        min: 0,
+                        max: 100,
+                        display: true,
+                        value: 'sdfsd',
+                        title: {
+                            display: true,
+                            text: 'Probability',
+                        },
+                    },
+                    x: {
+                        grid: {
+                            display: false
+                        },
+                    }
+                }
+            },
+        });
+
+        $('#exploreInput').on('input', function (x) {
+            
+            let val = x.target.value
+
+            console.log(val)
+
+            // $('#exploreInput').text(val)        
+
+            myChart.data.datasets.forEach((dataset) => {
+                dataset.data = [probGuilty(), 100-probGuilty()];
+            });
+
+            sliderMoved = true
+
+            myChart.update()
+        });
+        
+
+        // end data explore code
 
         function probGuilty() {
             // probability found guilty at trial
-            let c = $('#chargeInput').val()
-            console.log("here is charge, ", c)
+            let c = $('#exploreInput').val()
             return (1 - c / 100) * 100
         }
 
@@ -108,11 +261,12 @@
 
         function randomizeInput() {
             // set random value to charge input
-            let rand_start = Math.floor(Math.random() * 101);
-            $('#chargeInput').val(rand_start)
+            // let rand_start = Math.floor(Math.random() * 101);
+            let rand_start = Math.random() * (upper - lower + .01) + lower
+            $('#exploreInput').val(rand_start)
         }
 
-        // randomizeInput()
+        randomizeInput()
 
     </script>
 {{ endblock }}

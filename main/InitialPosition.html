@@ -47,11 +47,11 @@
     <div style="display: flex; justify-content: space-between; width: 600px; margin: auto">
         <div>0{{Constants.currency_unit}}</div>
         <div>Please use the slider to choose your INITIAL POSITION.</div>
-        <div>100{{Constants.currency_unit}}</div>
+        <div>{{Constants.offer_initpos_ceiling}}{{Constants.currency_unit}}</div>
     </div>
 
     <div class="slidecontainer" style="width: 600px; margin: auto">
-        <input type="range" min="0" max="100" value="50" class="slider" id="chargeInput" step=".01" name="initial_position">
+        <input type="range" min="0" max="{{Constants.offer_initpos_ceiling}}" value="50" class="slider" id="chargeInput" step=".01" name="initial_position">
     </div>
 
     <div id="zz" style="display: none;">

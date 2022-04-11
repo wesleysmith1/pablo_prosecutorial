@@ -34,6 +34,8 @@ class Constants(BaseConstants):
     i = 'I'
     l = 'L'
 
+    offer_initpos_ceiling = 60
+
     currency_unit = ''
     conversion_rate = 1/5
 

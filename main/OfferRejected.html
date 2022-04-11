@@ -88,6 +88,13 @@
     var trialCost = {{Constants.trial_cost}}
     var phi = {{ Constants.phi }}
 
+    var initialBars = [0, 0,]
+
+    // in case the upper is 0 and slider cannot be moved between 0-0 the chart should display the data when slider is at 0
+    if (upper == 0) {
+        initialBars = [probGuilty(), 100-probGuilty()]
+    }
+
     const ctx = document.getElementById('myChart').getContext('2d');
     const myChart = new Chart(ctx, {
         type: 'bar',
@@ -97,7 +104,7 @@
                 datalabels: {
                     formatter: function(value, context) {
 
-                        if (!sliderMoved) {
+                        if (!sliderMoved & upper != 0) {
                             return ['', '']
                         }
 
@@ -121,7 +128,7 @@
                     offset: 20,
                 },
                 display: false,
-                data: [0, 0,],
+                data: initialBars,
                 backgroundColor: [
                     'rgba(255, 99, 132, 0.2)',
                     'rgba(54, 162, 235, 0.2)',
@@ -217,6 +224,11 @@
     }
 
     randomizeInput()
+
+    // if upper is 0, the slider cannot more between 0-0 and page is stuck
+    if (upper == 0) {
+        showNextButton()
+    }
 
 </script>
 
