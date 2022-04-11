@@ -89,13 +89,13 @@
     
         <br>
     
-        <div style="text-align: center;">TODO: SHOULD THERE BE A LABEL HERE?</div>
+        <div style="text-align: center;">FINAL POSITIONS you can choose if your OFFER is rejected.</div>
     
         <br>
     
         <div style="display: flex; justify-content: space-between; width: 600px; margin: auto">
             <div><b>{{lower}}{{Constants.currency_unit}}</b></div>
-            <div>TODO: WHAT SHOULD THIS BE?: <b><span id="finalCharge"></span>{{Constants.currency_unit}}</b></div>
+            <div>Potential FINAL POSITION: <b><span id="potentialPosition"></span>{{Constants.currency_unit}}</b></div>
             <div><b>{{upper}}{{Constants.currency_unit}}</b></div>
         </div>
     
@@ -215,9 +215,7 @@
             
             let val = x.target.value
 
-            console.log(val)
-
-            // $('#exploreInput').text(val)        
+            $('#potentialPosition').text(val)        
 
             myChart.data.datasets.forEach((dataset) => {
                 dataset.data = [probGuilty(), 100-probGuilty()];

@@ -27,64 +27,66 @@ class Group(BaseGroup):
 
 class Player(BasePlayer):
     q1 = models.IntegerField(
-        label="Suppose the PROPOSER chooses an INITIAL POSITION of 60, and an OFFER of 40. If the RESPONDER accepts this OFFER the round earnings are:",
+        label="Suppose the PROPOSER chooses an INITIAL POSITION of 20, and an OFFER of 15. If the RESPONDER accepts this OFFER the round earnings are:",
         choices=[
-            [1, 'PROPOSER earns 60, and the RESPONDER loses 60'],
-            [2, 'PROPOSER earns 40, and the RESPONDER loses 40'],
-            [3, 'PROPOSER earns 60, and the RESPONDER loses 40'],
-            [4, 'PROPOSER earns 40, and the RESPONDER loses 60']
+            [1, 'PROPOSER earns 20, and the RESPONDER loses 20'],
+            [2, 'PROPOSER earns 15, and the RESPONDER loses 15'],
+            [3, 'PROPOSER earns 15, and the RESPONDER loses 20'],
+            [4, 'PROPOSER earns 20, and the RESPONDER loses 15'],
         ],
         widget=widgets.RadioSelect,
     )
     q2 = models.IntegerField(
-        label="Suppose the PROPOSER chooses an INITIAL POSITION of 75, and an OFFER of 30. The RESPONDER rejects this OFFER. The PROPOSER then chooses a FINAL POSITION of 55. The probability that the outcome is OUTCOME P is (BLANK) and the probability that the outcome is OUTCOME R is (BLANK).",
+        label="Suppose the PROPOSER chooses an INITIAL POSITION of 40, and an OFFER of 30. The RESPONDER rejects this OFFER. The PROPOSER then chooses a FINAL POSITION of 35. The probability that the outcome is OUTCOME P is (BLANK) and the probability that the outcome is OUTCOME R is (BLANK).",
         choices=[
-            [1, '45%, 35%'],
-            [2, '65%, 15%'],
+            [1, '35%, 45%'],
+            [2, '35%, 60%'],
             [3, '15%, 65%'],
-            [4, '35%, 45%'],
+            [4, '65%, 35%'],
 
         ],
         widget=widgets.RadioSelect,
     )
+    # phi = 1.5
     q3a = models.IntegerField(
         label="Suppose the PROPOSER chooses an INITIAL POSITION of 40, and an OFFER of 29. The RESPONDER rejects this OFFER. The PROPOSER then chooses a FINAL POSITION of 34. The probability that the outcome is OUTCOME P is 66% and the probability that the outcome is OUTCOME R is 34%. If the outcome that is chosen is OUTCOME P, the round earnings are:",
         choices=[
-            [1, 'PROPOSER earns 41, and the RESPONDER loses 24'],
-            [2, 'PROPOSER earns 24, and the RESPONDER earns -10'],
-            [3, 'PROPOSER loses 41, and the RESPONDER earns 24'],
-            [4, 'PROPOSER loses 41, and the RESPONDER loses 24']
+            [1, 'PROPOSER earns 24, and the RESPONDER loses 10'],
+            [2, 'PROPOSER earns 41, and the RESPONDER loses 44'],
+            [3, 'PROPOSER loses 41, and the RESPONDER earns 44'],
+            [4, 'PROPOSER loses 41, and the RESPONDER loses 44'],
         ],
         widget=widgets.RadioSelect,
     )
+    # phi = 1
     q3b = models.IntegerField(
         label="Suppose the PROPOSER chooses an INITIAL POSITION of 40, and an OFFER of 29. The RESPONDER rejects this OFFER. The PROPOSER then chooses a FINAL POSITION of 34. The probability that the outcome is OUTCOME P is 66% and the probability that the outcome is OUTCOME R is 34%. If the outcome that is chosen is OUTCOME P, the round earnings are:",
         choices=[
-            [1, 'PROPOSER earns 24, and the RESPONDER earns -10'],
-            [2, 'PROPOSER earns 24, and the RESPONDER loses 24'],
-            [3, 'PROPOSER loses 24, and the RESPONDER earns 24'],
-            [4, 'PROPOSER loses 24, and the RESPONDER loses 24']
+            [1, 'PROPOSER earns 24, and the RESPONDER loses 10'],
+            [2, 'PROPOSER earns 24, and the RESPONDER loses 44'],
+            [3, 'PROPOSER loses 24, and the RESPONDER earns 44'],
+            [4, 'PROPOSER loses 24, and the RESPONDER loses 44']
         ],
         widget=widgets.RadioSelect,
     )
     q4a = models.IntegerField(
-        label="Suppose the PROPOSER chooses an INITIAL POSITION of 80, what is the lowest number the FINAL POSITION could be? What is the highest?",
+        label="Suppose the PROPOSER chooses an INITIAL POSITION of 40, what is the lowest number the FINAL POSITION could be? What is the highest?",
         choices=[
-            [1, "16, 80"],
-            [2, "80, 16"],
-            [3, "54, 80"],
-            [4, "80, 54"]
+            [1, "8, 40"],
+            [2, "40, 8"],
+            [3, "35, 40"],
+            [4, "40, 35"]
         ],
         widget=widgets.RadioSelect,
     )
 
     q4b = models.IntegerField(
-        label="Suppose the PROPOSER chooses an INITIAL POSITION of 80, what is the lowest number the FINAL POSITION could be? What is the highest?",
+        label="Suppose the PROPOSER chooses an INITIAL POSITION of 40, what is the lowest number the FINAL POSITION could be? What is the highest?",
         choices=[
-            [1, "56, 80"],
-            [2, "80, 56"],
-            [3, "12, 80"],
-            [4, "80, 12"]
+            [1, "28, 40"],
+            [2, "40, 28"],
+            [3, "35, 40"],
+            [4, "40, 35"]
         ],
         widget=widgets.RadioSelect,
     )
