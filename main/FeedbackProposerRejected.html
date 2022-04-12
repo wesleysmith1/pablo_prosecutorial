@@ -56,7 +56,7 @@
 {% else %}
     <p>The outcome is <b>OUTCOME P</b></p>
 
-    <div style="display: flex; justify-content: space-between; width: 350px;">
+    <div style="display: flex; justify-content: space-between; width: 400px;">
         <div>
             Your round earnings are:
         </div>
@@ -64,13 +64,13 @@
             {% if Constants.phi == 1%}
                 <b style="color: green;">{{player.payoff_points}}</b>
             {% elif Constants.phi == 1.5 %}
-                1.5 x <b style="color: green;">{{player.group.final_position}}</b> = {{player.payoff_points}}
+                <b>1.5</b> x <b style="color: green;">{{player.group.final_position}}</b> - {{Constants.trial_cost}} = {{player.payoff_points}}
             {% else %}
                 PHI NOT CAPTURED
             {% endif %}
         </div>
     </div>
-    <div style="display: flex; justify-content: space-between; width: 350px;">
+    <div style="display: flex; justify-content: space-between; width: 400px;">
         <div>
             The RESPONDER's round earnings are:
         </div>

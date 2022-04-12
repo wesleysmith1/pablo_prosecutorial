@@ -54,7 +54,7 @@
     {% else %}
         <p>The outcome is <b>OUTCOME P</b></p>
 
-        <div style="display: flex; justify-content: space-between; width: 350px;">
+        <div style="display: flex; justify-content: space-between; width: 450px;">
             <div>
                 The PROPOSER's round earnings are:
             </div>
@@ -62,13 +62,13 @@
                 {% if Constants.phi == 1%}
                     <b style="color: green;">{{proposers_payoff}}</b>
                 {% elif Constants.phi == 1.5 %}
-                    1.5 x <b style="color: green;">{{player.group.final_position}}</b> = {{proposers_payoff}}
+                    <b>1.5</b> x <b style="color: green;">{{player.group.final_position}}</b> - {{Constants.trial_cost}} = {{proposers_payoff}}
                 {% else %}
                     PHI NOT CAPTURED
                 {% endif %}
             </div>
         </div>
-        <div style="display: flex; justify-content: space-between; width: 350px;">
+        <div style="display: flex; justify-content: space-between; width: 450px;">
             <div>
                 Your round earnings are:
             </div>
