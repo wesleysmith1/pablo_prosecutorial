@@ -25,8 +25,8 @@ class Constants(BaseConstants):
     c_upper = 100
 
     # treatment variables
-    phi = 1 
-    # phi = 1.5
+    # phi = 1 
+    phi = 1.5
     # alpha = [.2, .7]
     alpha = [.7, .2]
 
